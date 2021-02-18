@@ -11,19 +11,19 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jt.springsecurityproject.model.User;
 import com.jt.springsecurityproject.service.SService;
 
-@RestController
+@Controller
 @RequestMapping("/")
 public class Contr {
 	 @Autowired
 	    SService service;
 	@GetMapping("login")
-public ModelAndView getLoginView() {
+public String getLoginView() {
 	
-	return  new ModelAndView("login.html");
+	return  "login";
 }
-  @GetMapping("/getall")
-public List<User> getAllUsers(){
+  @GetMapping("/redirect")
+public String redirect(){
   	
-      return service.listAllUser();
+      return "redirect";
   }
 }

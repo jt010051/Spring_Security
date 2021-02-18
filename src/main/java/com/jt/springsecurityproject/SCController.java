@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,6 +25,7 @@ import com.jt.springsecurityproject.service.SService;
 
 @RestController
 @RequestMapping("project/user")
+
 public class SCController {
 
 	Logger logger = LoggerFactory.getLogger(SpringSecurityProjectApplication.class);
@@ -32,14 +34,14 @@ public class SCController {
 	    SService service;
     
     
-//    @GetMapping("/getall")
-//public List<User> getAllUsers(){
-//    	
-//        return service.listAllUser();
-//    }
+    @GetMapping("/getall")
+public List<User> getAllUsers(){
+    	
+        return service.listAllUser();
+    }
     
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable Integer id) {
+    public ResponseEntity<User> get(@RequestParam("User-id") Integer id) {
         try {
             User user = service.getUser(id);
             return new ResponseEntity<User>(user, HttpStatus.OK);

@@ -71,4 +71,8 @@ public class User {
 			this.role = role;
 		}
 		 public User() {}
+		public User(int id, String name) {
+this.id = id;
+this.username=name;
+}
 }
