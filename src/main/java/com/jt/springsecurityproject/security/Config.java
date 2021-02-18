@@ -3,6 +3,7 @@ package com.jt.springsecurityproject.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+
 public class Config extends WebSecurityConfigurerAdapter{
 	private final PasswordEncoder passwordEncoder;
 	@Autowired
@@ -24,12 +27,18 @@ public class Config extends WebSecurityConfigurerAdapter{
 		@Override
 		protected void configure (HttpSecurity http) throws Exception{
 			http 
+			.csrf().disable()
 			.authorizeRequests()
-			.antMatchers("/", "index", "/csss/*", "/js/*","login","/html/*").permitAll()
+			.antMatchers("/", "index", "/csss/*", "/js/*").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()
-			.httpBasic();
+			.formLogin()
+			.loginPage("/login")
+			.permitAll()
+			.passwordParameter("password")
+			.usernameParameter("username")
+		.defaultSuccessUrl("/getall", true);
 			
 		}
 		@Override

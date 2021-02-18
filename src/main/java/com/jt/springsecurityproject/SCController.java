@@ -2,30 +2,55 @@ package com.jt.springsecurityproject;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 
 import com.jt.springsecurityproject.model.User;
+import com.jt.springsecurityproject.service.SService;
 
 
 @RestController
 @RequestMapping("project/user")
 public class SCController {
-	private static final List<User> USERS= Arrays.asList(
-			new User (1, "James Bond", "j@gmail.com", "jbond", "password", "STANDARD"),
-			new User(2, "Mariah Hill", "m@gmail.com", "mhill", "password", "STANDARD"),
-			new User(3, "Steph Curry", "s@gmail.com", "scurry", "password", "STANDARD")
 
-			);
-	@GetMapping(path = "{id}")
-public User getUser(@PathVariable ("id") Integer userId) {
-	return USERS.stream()
-			.filter(user -> userId.equals(user.getId()))
-			.findFirst()
-			.orElseThrow(() -> new IllegalStateException("Student " + userId +" does not exist"));
-	
-}
+	Logger logger = LoggerFactory.getLogger(SpringSecurityProjectApplication.class);
+
+	    @Autowired
+	    SService service;
+    
+    
+//    @GetMapping("/getall")
+//public List<User> getAllUsers(){
+//    	
+//        return service.listAllUser();
+//    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<User> get(@PathVariable Integer id) {
+        try {
+            User user = service.getUser(id);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PostMapping("/add")
+    public void add(@RequestBody User user) {
+		logger.info(user.toString());
+
+    	service.saveUser(user);
+    }
 }
